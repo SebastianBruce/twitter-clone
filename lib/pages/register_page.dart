@@ -3,6 +3,7 @@ import 'package:twitter_clone/components/my_button.dart';
 import 'package:twitter_clone/components/my_loading_circle.dart';
 import 'package:twitter_clone/components/my_text_field.dart';
 import 'package:twitter_clone/services/auth/auth_service.dart';
+import 'package:twitter_clone/services/database/database_service.dart';
 
 /*
 
@@ -35,8 +36,9 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  // access auth service
+  // access auth service & db service
   final _auth = AuthService();
+  final _db = DatabaseService();
 
   // text controllers
   final TextEditingController nameController = TextEditingController();
@@ -61,6 +63,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
         // finished loading
         if (mounted) hideLoadingCircle(context);
+
+        // once registered, create and save user profile in database
+        await _db.saveUserInfoInFirebase(
+          name: nameController.text,
+          email: emailController.text,
+        );
       } catch (e) {
         // finished loading
         if (mounted) hideLoadingCircle(context);

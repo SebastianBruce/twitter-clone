@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:twitter_clone/components/my_drawer_tile.dart';
+import 'package:twitter_clone/pages/profile_page.dart';
 import 'package:twitter_clone/services/auth/auth_service.dart';
 import 'package:twitter_clone/pages/settings_page.dart';
 
@@ -60,12 +61,29 @@ class MyDrawer extends StatelessWidget {
                 title: "H O M E",
                 icon: Icons.home,
                 onTap: () {
-                  // pop menu since we are already at home
+                  // pop drawer since we are already at home
                   Navigator.pop(context);
                 },
               ),
 
               // profile list tile
+              MyDrawerTile(
+                title: "P R O F I L E",
+                icon: Icons.person,
+                onTap: () {
+                  // pop drawer
+                  Navigator.pop(context);
+
+                  // go to profile page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ProfilePage(uid: _auth.getCurrentUid()),
+                    ),
+                  );
+                },
+              ),
 
               // search list tile
 
@@ -74,7 +92,7 @@ class MyDrawer extends StatelessWidget {
                 title: "S E T T I N G S",
                 icon: Icons.settings,
                 onTap: () {
-                  // pop menu
+                  // pop drawer
                   Navigator.pop(context);
 
                   // go to settings page
