@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:twitter_clone/components/my_drawer_tile.dart';
+import 'package:twitter_clone/services/auth/auth_service.dart';
 import 'package:twitter_clone/pages/settings_page.dart';
 
 /*
@@ -20,7 +21,14 @@ Contains 5 menu options:
 */
 
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({super.key});
+  MyDrawer({super.key});
+
+  // access auth service
+  final _auth = AuthService();
+
+  void logout() {
+    _auth.logout();
+  }
 
   // BUILD UI
   @override
@@ -77,7 +85,14 @@ class MyDrawer extends StatelessWidget {
                 },
               ),
 
+              const Spacer(),
+
               // logout list tile
+              MyDrawerTile(
+                title: "L O G O U T",
+                icon: Icons.logout,
+                onTap: logout,
+              ),
             ],
           ),
         ),
