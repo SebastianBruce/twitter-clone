@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:twitter_clone/components/my_settings_tile.dart';
 import 'package:twitter_clone/themes/theme_provider.dart';
 
+import '../helper/navigate_pages.dart';
+
 /*
 
 SETTINGS PAGE
@@ -48,8 +50,28 @@ class SettingsPage extends StatelessWidget {
           ),
 
           // Block users tile
+          MySettingsTile(
+            title: "Blocked Users",
+            action: IconButton(
+              onPressed: () => goToBlockedUsersPage(context),
+              icon: Icon(
+                Icons.arrow_forward,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
 
           // Account settings tile
+          MySettingsTile(
+            title: "Account Settings",
+            action: IconButton(
+              onPressed: () => goAccountSettingsPage(context),
+              icon: Icon(
+                Icons.arrow_forward,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
         ],
       ),
     );

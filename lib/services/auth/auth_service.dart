@@ -14,6 +14,7 @@ This handles everything to do with authentication in firebase
 */
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:twitter_clone/services/database/database_service.dart';
 
 class AuthService {
   // get instance of the auth
@@ -61,4 +62,16 @@ class AuthService {
   }
 
   // delete account
+  Future<void> deleteAccount() async {
+    // get current uid
+    User? user = getCurrentUser();
+
+    if (user != null) {
+      // delete user's data from firestore
+      await DatabaseService().deleteUserInfoFromFirebase(user.uid);
+
+      // delete the user's auth record
+      await user.delete();
+    }
+  }
 }

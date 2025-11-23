@@ -154,19 +154,24 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // text
                 Text(
                   "Bio",
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
-                GestureDetector(
-                  onTap: _showEditBioBox,
-                  child: Icon(
-                    Icons.settings,
-                    color: Theme.of(context).colorScheme.primary,
+
+                // button
+                // only show edit button on own profile
+                if (user != null && user!.uid == currentUserId)
+                  GestureDetector(
+                    onTap: _showEditBioBox,
+                    child: Icon(
+                      Icons.settings,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
-                ),
               ],
             ),
           ),
