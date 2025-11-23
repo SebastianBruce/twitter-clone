@@ -18,6 +18,7 @@ This class handles all the data from and to firebase.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:twitter_clone/models/comment.dart';
 import 'package:twitter_clone/models/post.dart';
 import 'package:twitter_clone/models/user.dart';
 import 'package:twitter_clone/services/auth/auth_service.dart';
@@ -218,6 +219,60 @@ class DatabaseService {
   COMMENTS
 
   */
+
+  // Add a comment to a post
+  Future<void> addCommentInFirebase(String postId, message) async {
+    try {
+      // get current ujser
+      String uid = _auth.currentUser!.uid;
+      UserProfile? user = await getUserFromFirebase(uid);
+
+      // create a new comment
+      Comment newComment = Comment(
+        id: '', // auto generate by firestore
+        postId: postId,
+        uid: uid,
+        name: user!.name,
+        username: user.username,
+        message: message,
+        timestamp: Timestamp.now(),
+      );
+
+      // convert comment to map
+      Map<String, dynamic> newCommentMap = newComment.toMap();
+
+      // to store in firebase
+      await _db.collection("Comments").add(newCommentMap);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  // Delete a comment from a post
+  Future<void> deleteCommentInFirebase(String commentId) async {
+    try {
+      await _db.collection("Comments").doc(commentId).delete();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  // Fetch comments for a post
+  Future<List<Comment>> getCommentsFromFirebase(String postId) async {
+    try {
+      // get comments from firebase
+      QuerySnapshot snapshot = await _db
+          .collection("Comments")
+          .where("postId", isEqualTo: postId)
+          .get();
+
+      // return as a list of comments
+      return snapshot.docs.map((doc) => Comment.fromDocument(doc)).toList();
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
 
   /*
 

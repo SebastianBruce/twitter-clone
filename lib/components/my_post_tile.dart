@@ -18,6 +18,7 @@ To use this widget, you need:
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:twitter_clone/components/my_input_alert_box.dart';
 import 'package:twitter_clone/models/post.dart';
 import 'package:twitter_clone/services/auth/auth_service.dart';
 import 'package:twitter_clone/services/database/database_provider.dart';
@@ -46,6 +47,15 @@ class _MyPostTileState extends State<MyPostTile> {
     listen: false,
   );
 
+  // on startup
+  @override
+  void initState() {
+    super.initState();
+
+    // load comments for this post
+    _loadComments();
+  }
+
   /*
 
   LIKES
@@ -61,6 +71,53 @@ class _MyPostTileState extends State<MyPostTile> {
     }
   }
 
+  /*
+
+  COMMENTS
+
+  */
+
+  // comment text controller
+  final _commentController = TextEditingController();
+
+  // open comment box -> user wants to type new comment
+  void _openNewCommentBox() {
+    showDialog(
+      context: context,
+      builder: (context) => MyInputAlertBox(
+        textController: _commentController,
+        hintText: "Type a comment",
+        onPressed: () async {
+          // add comment in db
+          await _addComment();
+        },
+        onPressedText: "Post",
+      ),
+    );
+  }
+
+  // user tapped post to add comment
+  Future<void> _addComment() async {
+    // does nothing if theres nothing in the textfield
+    if (_commentController.text.trim().isEmpty) return;
+
+    // attempt to post comment
+    try {
+      await databaseProvider.addComment(
+        widget.post.id,
+        _commentController.text.trim(),
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  // load comments
+  Future<void> _loadComments() async {
+    await databaseProvider.loadComments(widget.post.id);
+  }
+
+  // show options
   void _showOptions() {
     // check if this post is owned by the user or not
     String currentUid = AuthService().getCurrentUid();
@@ -136,6 +193,9 @@ class _MyPostTileState extends State<MyPostTile> {
 
     // listen to like count
     int likeCount = listeningProvider.getLikeCount(widget.post.id);
+
+    // listen to comment count
+    int commentCount = listeningProvider.getComments(widget.post.id).length;
 
     // Container
     return GestureDetector(
@@ -221,24 +281,59 @@ class _MyPostTileState extends State<MyPostTile> {
             // buttons -> like + comment
             Row(
               children: [
-                // like button
-                GestureDetector(
-                  onTap: _toggleLikePost,
-                  child: likedByCurrentUser
-                      ? Icon(Icons.favorite, color: Colors.red)
-                      : Icon(
-                          Icons.favorite_border,
+                // LIKE SECTION
+                SizedBox(
+                  width: 60,
+                  child: Row(
+                    children: [
+                      // like button
+                      GestureDetector(
+                        onTap: _toggleLikePost,
+                        child: likedByCurrentUser
+                            ? Icon(Icons.favorite, color: Colors.red)
+                            : Icon(
+                                Icons.favorite_border,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                      ),
+
+                      const SizedBox(width: 5),
+
+                      // like count
+                      Text(
+                        likeCount.toString(),
+                        style: TextStyle(
                           color: Theme.of(context).colorScheme.primary,
                         ),
+                      ),
+                    ],
+                  ),
                 ),
 
-                const SizedBox(width: 5),
+                // COMMENT SECTIONS
+                SizedBox(
+                  width: 60,
+                  child: Row(
+                    children: [
+                      //comment button
+                      GestureDetector(
+                        onTap: _openNewCommentBox,
+                        child: Icon(
+                          Icons.comment,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
 
-                // like count
-                Text(
-                  likeCount.toString(),
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
+                      const SizedBox(width: 5),
+
+                      // comment count
+                      Text(
+                        commentCount.toString(),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
