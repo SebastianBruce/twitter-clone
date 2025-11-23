@@ -10,6 +10,8 @@ This page displays:
 */
 
 import 'package:flutter/material.dart';
+import 'package:twitter_clone/components/my_post_tile.dart';
+import 'package:twitter_clone/helper/navigate_pages.dart';
 import 'package:twitter_clone/models/post.dart';
 
 class PostPage extends StatefulWidget {
@@ -26,6 +28,25 @@ class _PostPageState extends State<PostPage> {
   @override
   Widget build(BuildContext context) {
     // SCAFFOLD
-    return Scaffold(appBar: AppBar(title: Text(widget.post.message)));
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+
+      // App Bar
+      appBar: AppBar(foregroundColor: Theme.of(context).colorScheme.primary),
+
+      // Body
+      body: ListView(
+        children: [
+          // Post
+          MyPostTile(
+            post: widget.post,
+            onUserTap: () => goUserPage(context, widget.post.uid),
+            onPostTap: () {},
+          ),
+
+          // Comments on this post
+        ],
+      ),
+    );
   }
 }
