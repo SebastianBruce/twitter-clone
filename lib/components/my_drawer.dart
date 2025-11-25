@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:twitter_clone/components/my_drawer_tile.dart';
 import 'package:twitter_clone/pages/profile_page.dart';
+import 'package:twitter_clone/pages/search_page.dart';
 import 'package:twitter_clone/services/auth/auth_service.dart';
 import 'package:twitter_clone/pages/settings_page.dart';
 
@@ -86,6 +87,20 @@ class MyDrawer extends StatelessWidget {
               ),
 
               // search list tile
+              MyDrawerTile(
+                title: "S E A R C H",
+                icon: Icons.search,
+                onTap: () {
+                  // pop drawer
+                  Navigator.pop(context);
+
+                  // go to settings page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SearchPage()),
+                  );
+                },
+              ),
 
               // settings list tile
               MyDrawerTile(

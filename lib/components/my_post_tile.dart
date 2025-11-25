@@ -19,6 +19,7 @@ To use this widget, you need:
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone/components/my_input_alert_box.dart';
+import 'package:twitter_clone/helper/time_formatter.dart';
 import 'package:twitter_clone/models/post.dart';
 import 'package:twitter_clone/services/auth/auth_service.dart';
 import 'package:twitter_clone/services/database/database_provider.dart';
@@ -424,6 +425,16 @@ class _MyPostTileState extends State<MyPostTile> {
                         ),
                       ),
                     ],
+                  ),
+                ),
+
+                const Spacer(),
+
+                // timestamp
+                Text(
+                  formatTimestamp(widget.post.timestamp),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ],
