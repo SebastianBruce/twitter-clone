@@ -11,6 +11,7 @@ This page displays a tab bar for ( a given uid ) :
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:twitter_clone/components/my_user_tile.dart';
 import 'package:twitter_clone/models/user.dart';
 import 'package:twitter_clone/services/database/database_provider.dart';
 
@@ -66,10 +67,16 @@ class _FollowListPageState extends State<FollowListPage> {
 
       // SCAFFOLD
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         // App Bar
         appBar: AppBar(
+          foregroundColor: Theme.of(context).colorScheme.primary,
           // Tab Bar
           bottom: TabBar(
+            dividerColor: Colors.transparent,
+            labelColor: Theme.of(context).colorScheme.inversePrimary,
+            unselectedLabelColor: Theme.of(context).colorScheme.primary,
+            indicatorColor: Theme.of(context).colorScheme.secondary,
             // Tabs
             tabs: [Text("Followers"), Text("Following")],
           ),
@@ -101,7 +108,7 @@ class _FollowListPageState extends State<FollowListPage> {
               final user = userList[index];
 
               // return as a user list tile
-              return ListTile(title: Text(user.name));
+              return MyUserTile(user: user);
             },
           );
   }
